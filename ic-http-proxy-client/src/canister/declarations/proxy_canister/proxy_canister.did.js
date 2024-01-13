@@ -1,11 +1,11 @@
 export const idlFactory = ({ IDL }) => {
-  const HttpRequestId = IDL.Nat32;
+  const HttpRequestId = IDL.Nat64;
   const CanisterId = IDL.Principal;
   const CanisterCallbackMethodName = IDL.Text;
   const RequestState = IDL.Variant({
-    'Failed' : IDL.Text,
     'Executing' : IDL.Opt(CanisterCallbackMethodName),
-    'Successful' : IDL.Null,
+    'Executed' : IDL.Null,
+    'CallbackFailed' : IDL.Text,
   });
   const CanisterRequest = IDL.Record({
     'canister_id' : CanisterId,

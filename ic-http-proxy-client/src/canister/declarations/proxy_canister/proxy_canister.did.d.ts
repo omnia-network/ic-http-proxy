@@ -74,7 +74,7 @@ export interface HttpRequestEndpointArgs {
 }
 export type HttpRequestEndpointResult = { 'Ok' : HttpRequestId } |
   { 'Err' : ProxyCanisterError };
-export type HttpRequestId = number;
+export type HttpRequestId = bigint;
 export type HttpRequestTimeoutMs = bigint;
 export interface HttpResponse {
   'status' : bigint,
@@ -86,9 +86,9 @@ export type InvalidRequest = { 'TooManyHeaders' : null } |
   { 'InvalidUrl' : string };
 export type ProxyCanisterError = { 'HttpOverWs' : HttpOverWsError } |
   { 'InvalidRequest' : InvalidRequest };
-export type RequestState = { 'Failed' : string } |
-  { 'Executing' : [] | [CanisterCallbackMethodName] } |
-  { 'Successful' : null };
+export type RequestState = { 'Executing' : [] | [CanisterCallbackMethodName] } |
+  { 'Executed' : null } |
+  { 'CallbackFailed' : string };
 export interface WebsocketMessage {
   'sequence_num' : bigint,
   'content' : Uint8Array | number[],

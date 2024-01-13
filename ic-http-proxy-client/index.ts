@@ -26,6 +26,13 @@ const openWsConnection = () => {
 
   ws.onopen = () => {
     console.log("WebSocket connected with principal", principal);
+
+    // send the setup message
+    ws.send({
+      SetupProxyClient: null,
+    });
+
+    console.log("Setup message sent");
   };
 
   ws.onmessage = async (ev) => {
@@ -50,8 +57,8 @@ const openWsConnection = () => {
         "\nurl:", url.toString(),
         "\nmethod:", method,
         "\nheaders:", headers,
-        "\nbody bytes:", body?.length,
-        "\nbody:", body ? new TextDecoder().decode(body) : null
+        "\nbody bytes:", body?.length || 0,
+        // "\nbody:", body ? new TextDecoder().decode(body) : null
       );
 
       try {
@@ -68,7 +75,7 @@ const openWsConnection = () => {
           "\nurl:", request.url,
           "\nstatus:", response.status,
           "\nbody bytes:", responseBody.byteLength,
-          "\nbody:", new TextDecoder().decode(responseBody),
+          // "\nbody:", new TextDecoder().decode(responseBody),
         );
 
         ws.send({
