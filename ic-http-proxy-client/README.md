@@ -1,4 +1,4 @@
-# ic-http-request-executor
+# ic-http-proxy-client
 
 To install dependencies:
 

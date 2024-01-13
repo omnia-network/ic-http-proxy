@@ -1,6 +1,6 @@
 {
-  "name": "ic-http-request-executor",
-  "version": "0.0.5",
+  "name": "ic-http-proxy-client",
+  "version": "0.0.1",
   "module": "index.ts",
   "devDependencies": {
     "bun-types": "latest"

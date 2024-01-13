@@ -5,7 +5,7 @@
       "package": "proxy_canister",
       "type": "rust",
       "declarations": {
-        "output": "./ic-http-request-executor/src/canister/declarations/proxy_canister"
+        "output": "./ic-http-proxy-client/src/canister/declarations/proxy_canister"
       }
     }
   },
@@ -15,7 +15,7 @@
       "packtool": ""
     }
   },
-  "output_env_file": "ic-http-request-executor/.env",
+  "output_env_file": "ic-http-proxy-client/.env",
   "version": 1,
   "dfx": "0.15.3"
 }
