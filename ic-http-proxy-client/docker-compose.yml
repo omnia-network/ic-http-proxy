@@ -1,0 +1,5 @@
+services:
+  proxy_client:
+    image: omniadevs/ic-http-proxy-client:latest
+    restart: always
+    env_file: .env

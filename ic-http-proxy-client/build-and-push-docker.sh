@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # build docker image
-docker build -t ic-http-proxy-client:latest .
+docker build --platform=linux/amd64 -t ic-http-proxy-client:latest .
 
 # tag for omniadevs registry
 docker tag ic-http-proxy-client:latest omniadevs/ic-http-proxy-client:latest
