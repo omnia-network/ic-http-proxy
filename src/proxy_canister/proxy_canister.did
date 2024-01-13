@@ -1,0 +1,170 @@
+/* WebSocket types */
+type ClientPrincipal = principal;
+type GatewayPrincipal = principal;
+type ClientKey = record {
+    client_principal : ClientPrincipal;
+    client_nonce : nat64;
+};
+
+type WebsocketMessage = record {
+    client_key : ClientKey;
+    sequence_num : nat64;
+    timestamp : nat64;
+    is_service_message : bool;
+    content : blob;
+};
+
+type CanisterOutputMessage = record {
+    client_key : ClientKey;
+    key : text;
+    content : blob;
+};
+
+type CanisterOutputCertifiedMessages = record {
+    messages : vec CanisterOutputMessage;
+    cert : blob;
+    tree : blob;
+    is_end_of_queue : bool;
+};
+
+type CanisterWsOpenArguments = record {
+    client_nonce : nat64;
+    gateway_principal : GatewayPrincipal;
+};
+
+type CanisterWsOpenResult = variant {
+    Ok : null;
+    Err : text;
+};
+
+type CanisterWsCloseArguments = record {
+    client_key : ClientKey;
+};
+
+type CanisterWsCloseResult = variant {
+    Ok : null;
+    Err : text;
+};
+
+type CanisterWsMessageArguments = record {
+    msg : WebsocketMessage;
+};
+
+type CanisterWsMessageResult = variant {
+    Ok : null;
+    Err : text;
+};
+
+type CanisterWsGetMessagesArguments = record {
+    nonce : nat64;
+};
+
+type CanisterWsGetMessagesResult = variant {
+    Ok : CanisterOutputCertifiedMessages;
+    Err : text;
+};
+/* End WebSocket types */
+
+/* HttpOverWs types */
+type HttpRequestId = nat32;
+
+type HttpMethod = variant {
+    GET;
+    POST;
+    PUT;
+    HEAD;
+    DELETE;
+};
+
+type HttpHeader = record {
+    name : text;
+    value : text;
+};
+
+type HttpRequest = record {
+    url : text;
+    method : HttpMethod;
+    headers : vec HttpHeader;
+    body : opt blob;
+};
+
+type HttpRequestTimeoutMs = nat64;
+
+type HttpResponse = record {
+    status : nat;
+    headers : vec HttpHeader;
+    body : blob;
+};
+
+type HttpOverWsMessage = variant {
+    SetupProxyClient;
+    HttpRequest : record { HttpRequestId; HttpRequest };
+    HttpResponse : record { HttpRequestId; HttpResponse };
+    Error : record { opt HttpRequestId; text };
+};
+
+type HttpFailureReason = variant {
+    RequestTimeout;
+    ProxyError : text;
+};
+
+type HttpOverWsError = variant {
+    NotHttpOverWsType : text;
+    InvalidHttpMessage;
+    ProxyNotFound;
+    RequestIdNotFound;
+    NotYetReceived;
+    NoProxiesConnected;
+    ConnectionNotAssignedToProxy;
+    RequestFailed : HttpFailureReason;
+};
+/* End HttpOverWs types */
+
+/* Proxy canister types */
+type CanisterId = principal;
+type CanisterCallbackMethodName = text;
+
+type HttpRequestEndpointArgs = record {
+    request : HttpRequest;
+    timeout_ms : opt HttpRequestTimeoutMs;
+    callback_method_name : opt CanisterCallbackMethodName;
+};
+
+type InvalidRequest = variant {
+    InvalidUrl : text;
+    TooManyHeaders;
+    InvalidTimeout;
+};
+
+type ProxyCanisterError = variant {
+    InvalidRequest : InvalidRequest;
+    HttpOverWs : HttpOverWsError;
+};
+
+type HttpRequestEndpointResult = variant {
+    Ok : HttpRequestId;
+    Err : ProxyCanisterError;
+};
+
+type RequestState = variant {
+    Executing : opt CanisterCallbackMethodName;
+    Successful;
+    Failed : text;
+};
+
+type CanisterRequest = record {
+    canister_id : CanisterId;
+    state : RequestState;
+};
+/* End Proxy canister types */
+
+service : () -> {
+    "ws_open" : (CanisterWsOpenArguments) -> (CanisterWsOpenResult);
+    "ws_close" : (CanisterWsCloseArguments) -> (CanisterWsCloseResult);
+    "ws_message" : (CanisterWsMessageArguments, opt HttpOverWsMessage) -> (CanisterWsMessageResult);
+    "ws_get_messages" : (CanisterWsGetMessagesArguments) -> (CanisterWsGetMessagesResult) query;
+
+    "http_request" : (HttpRequestEndpointArgs) -> (HttpRequestEndpointResult);
+    "get_request_by_id" : (HttpRequestId) -> (opt CanisterRequest) query;
+    "get_logs" : () -> (vec record { text; text }) query;
+};

@@ -1,0 +1,23 @@
+[package]
+name = "http_over_ws"
+version = "0.0.1"
+edition = { workspace = true }
+
+[dependencies]
+candid = { workspace = true }
+ic-cdk = { workspace = true }
+ic-cdk-timers = { workspace = true }
+ic-websocket-cdk = { workspace = true }
+serde = { workspace = true }
+
+logger = { workspace = true }
+
+[dev-dependencies]
+pocket-ic = "2.0.1"
+ring = "0.16.20"
+ic-agent = "0.30.0"
+rand = "0.8.5"
+lazy_static = "1.4.0"
+serde_cbor = { workspace = true }
+
+test_utils = { workspace = true }

@@ -1,0 +1,31 @@
+[workspace]
+members = [
+  "src/http_over_ws",
+  "src/proxy_canister",
+  "src/proxy_canister_types",
+  "src/logger",
+  "src/http_over_ws/tests/test_canister",
+  "src/proxy_canister/tests/test_user_canister",
+  "src/test_utils",
+]
+resolver = "2"
+
+[workspace.package]
+edition = "2021"
+
+[workspace.dependencies]
+serde = "1.0.193"
+candid = "0.9.3"
+ic-cdk = "0.10.0"
+ic-cdk-macros = "0.7.1"
+ic-cdk-timers = "0.4.0"
+ic-websocket-cdk = { git = "https://github.com/omnia-network/ic-websocket-cdk-rs/", branch = "feat/public-structs" }
+serde_cbor = "0.11.2"
+url = "2.5.0"
+lazy_static = "1.4.0"
+pocket-ic = "2.0.1"
+
+logger = { path = "src/logger" }
+http_over_ws = { path = "src/http_over_ws" }
+test_utils = { path = "src/test_utils" }
+proxy_canister_types = { path = "src/proxy_canister_types" }

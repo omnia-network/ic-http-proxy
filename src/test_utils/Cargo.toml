@@ -1,0 +1,18 @@
+[package]
+name = "test_utils"
+version = "0.0.1"
+edition = { workspace = true }
+
+[dependencies]
+candid = { workspace = true }
+ic-cdk = { workspace = true }
+ic-websocket-cdk = { workspace = true }
+serde = { workspace = true }
+pocket-ic = { workspace = true }
+ring = "0.16.20"
+ic-agent = "0.30.0"
+rand = "0.8.5"
+lazy_static = { workspace = true }
+serde_cbor = { workspace = true }
+
+http_over_ws = { workspace = true }

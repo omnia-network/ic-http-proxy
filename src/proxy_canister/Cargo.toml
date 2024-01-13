@@ -1,0 +1,26 @@
+[package]
+name = "proxy_canister"
+version = "0.1.0"
+edition = { workspace = true }
+
+[lib]
+# enable the types to be imported in tests adding the `lib` crate type
+crate-type = ["cdylib", "lib"]
+
+[dependencies]
+candid = { workspace = true }
+ic-cdk = { workspace = true }
+ic-cdk-macros = { workspace = true }
+ic-cdk-timers = { workspace = true }
+serde = { workspace = true }
+url = { workspace = true }
+ic-websocket-cdk = { workspace = true }
+
+logger = { workspace = true }
+http_over_ws = { workspace = true }
+proxy_canister_types = { workspace = true }
+
+[dev-dependencies]
+pocket-ic = { workspace = true }
+lazy_static = { workspace = true }
+test_utils = { workspace = true }

@@ -1,0 +1,18 @@
+[package]
+name = "test_canister"
+version = "0.1.0"
+edition = { workspace = true }
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+candid = { workspace = true }
+ic-cdk = { workspace = true }
+ic-cdk-macros = { workspace = true }
+serde = { workspace = true }
+url = { workspace = true }
+serde_cbor = { workspace = true }
+ic-websocket-cdk = { workspace = true }
+http_over_ws = { workspace = true }
+logger = { workspace = true }

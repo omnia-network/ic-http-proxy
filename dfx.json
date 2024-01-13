@@ -1,0 +1,21 @@
+{
+  "canisters": {
+    "proxy_canister": {
+      "candid": "src/proxy_canister/proxy_canister.did",
+      "package": "proxy_canister",
+      "type": "rust",
+      "declarations": {
+        "output": "./ic-http-request-executor/src/canister/declarations/proxy_canister"
+      }
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": "ic-http-request-executor/.env",
+  "version": 1,
+  "dfx": "0.15.3"
+}
