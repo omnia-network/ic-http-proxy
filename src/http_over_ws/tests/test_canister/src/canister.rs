@@ -13,31 +13,26 @@ thread_local! {
 }
 
 pub fn on_open(args: OnOpenCallbackArgs) {
-    log(&format!("WS proxy: {:?} connected", args.client_principal));
+    log!("WS proxy: {} connected", args.client_principal);
 }
 
 pub fn on_message(args: OnMessageCallbackArgs) {
     if let Err(HttpOverWsError::NotHttpOverWsType(_)) =
         http_over_ws::try_handle_http_over_ws_message(args.client_principal, args.message.clone())
     {
-        log(&format!(
+        log!(
             "Received WS proxy message: {:?} from {}",
-            args.message, args.client_principal
-        ));
+            args.message,
+            args.client_principal
+        );
     }
 }
 
 pub fn on_close(args: OnCloseCallbackArgs) {
     if let Err(_) = http_over_ws::try_disconnect_http_proxy(args.client_principal) {
-        log(&format!(
-            "WS proxy {:?} disconnected",
-            args.client_principal
-        ));
+        log!("WS proxy {} disconnected", args.client_principal);
     } else {
-        log(&format!(
-            "Proxy client {:?} disconnected",
-            args.client_principal
-        ));
+        log!("Proxy client {} disconnected", args.client_principal);
     }
 }
 

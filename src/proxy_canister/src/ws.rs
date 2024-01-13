@@ -21,7 +21,7 @@ pub fn init_ws() {
 }
 
 pub fn on_open(args: OnOpenCallbackArgs) {
-    log!("[ws]: WS client: {:?} connected", args.client_principal);
+    log!("[ws]: WS client: {} connected", args.client_principal);
 }
 
 pub fn on_message(args: OnMessageCallbackArgs) {

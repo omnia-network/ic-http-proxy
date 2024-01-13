@@ -145,10 +145,10 @@ impl HttpConnection {
                             ic_cdk_timers::clear_timer(timer_id);
                         }
 
-                        log(&format!(
+                        log!(
                             "http_over_ws: HTTP connection with id {} received response",
                             self.id
-                        ));
+                        );
 
                         let mut res = None;
                         if let Some(callback) = callback.take() {
@@ -160,10 +160,11 @@ impl HttpConnection {
                         return res;
                     }
                     HttpResult::Failure(reason) => {
-                        log(&format!(
+                        log!(
                             "http_over_ws: HTTP connection with id {} failed with reason {:?}",
-                            self.id, reason
-                        ));
+                            self.id,
+                            reason
+                        );
 
                         let mut res = None;
                         if let Some(callback) = callback.take() {
@@ -177,16 +178,16 @@ impl HttpConnection {
                 }
             }
             HttpConnectionState::Failed(_) => {
-                log(&format!(
+                log!(
                     "http_over_ws: HTTP connection with id {} has already failed",
                     self.id
-                ));
+                );
             }
             HttpConnectionState::Success(_) => {
-                log(&format!(
+                log!(
                     "http_over_ws: HTTP connection with id {} has already succeeded",
                     self.id
-                ));
+                );
             }
         }
         None

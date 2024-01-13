@@ -12,20 +12,12 @@ pub fn try_handle_http_over_ws_message(
     let incoming_msg = HttpOverWsMessage::from_bytes(&serialized_message)
         .map_err(|e| HttpOverWsError::NotHttpOverWsType(e))?;
 
-    log(&format!(
-        "http_over_ws: incoming message: {:?} from {}",
-        incoming_msg, proxy_principal
-    ));
-
     match incoming_msg {
         HttpOverWsMessage::SetupProxyClient => {
             STATE.with(|state| {
                 state.borrow_mut().add_proxy(proxy_principal);
             });
-            log(&format!(
-                "http_over_ws: client proxy {} connected",
-                proxy_principal
-            ));
+            log!("http_over_ws: client proxy {} connected", proxy_principal);
         }
         HttpOverWsMessage::HttpResponse(request_id, response) => {
             handle_http_result(proxy_principal, request_id, HttpResult::Success(response));
@@ -38,14 +30,11 @@ pub fn try_handle_http_over_ws_message(
                     HttpResult::Failure(HttpFailureReason::ProxyError(err)),
                 );
             } else {
-                log(&format!("http_over_ws: incoming error: {}", err));
+                log!("http_over_ws: incoming error: {}", err);
             }
         }
         HttpOverWsMessage::HttpRequest(_, _) => {
-            let e = String::from(
-                "http_over_ws: client proxy is not allowed to send HTTP connections over WS",
-            );
-            log(&e);
+            log!("http_over_ws: client proxy is not allowed to send HTTP connections over WS");
         }
     };
     Ok(())
@@ -54,10 +43,7 @@ pub fn try_handle_http_over_ws_message(
 pub fn try_disconnect_http_proxy(proxy_principal: Principal) -> Result<(), HttpOverWsError> {
     STATE.with(|state| state.borrow_mut().remove_proxy(&proxy_principal))?;
 
-    log(&format!(
-        "http_over_ws: Client {} disconnected",
-        proxy_principal
-    ));
+    log!("http_over_ws: Client {} disconnected", proxy_principal);
     Ok(())
 }
 
@@ -75,10 +61,11 @@ fn handle_http_result(
             trigger_callback_with_result(request_id, callback_with_result);
         }
         Err(e) => {
-            log(&format!(
+            log!(
                 "http_over_ws: error {:?} while updating state for request with id: {}",
-                e, request_id
-            ));
+                e,
+                request_id
+            );
         }
     }
 }
@@ -90,15 +77,15 @@ pub(crate) fn trigger_callback_with_result(
     if let Some((callback, http_result)) = callback_with_result {
         ic_cdk::spawn(async move { callback(request_id, http_result).await });
 
-        log(&format!(
+        log!(
             "http_over_ws: triggered callback with result for request with id: {}",
             request_id
-        ));
+        );
     } else {
-        log(&format!(
+        log!(
             "http_over_ws: request with id: {} completed without callback",
             request_id
-        ));
+        );
     }
 }
 
