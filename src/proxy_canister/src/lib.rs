@@ -151,17 +151,17 @@ async fn http_request_callback(request_id: HttpRequestId, res: HttpResult) {
 }
 
 #[query]
-async fn get_request_by_id(request_id: HttpRequestId) -> Option<CanisterRequest> {
+fn get_request_by_id(request_id: HttpRequestId) -> Option<CanisterRequest> {
     let caller = caller();
-    guard_caller_is_controller(&caller).await;
+    guard_caller_is_controller(&caller);
 
     STATE.with(|state| state.borrow().get_request_state(request_id))
 }
 
 #[query]
-async fn get_logs() -> Vec<(String, String)> {
+fn get_logs() -> Vec<(String, String)> {
     let caller = caller();
-    guard_caller_is_controller(&caller).await;
+    guard_caller_is_controller(&caller);
 
     logger::get_logs()
 }
