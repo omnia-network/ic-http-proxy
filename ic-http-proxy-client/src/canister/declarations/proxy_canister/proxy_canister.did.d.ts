@@ -97,6 +97,7 @@ export interface WebsocketMessage {
   'is_service_message' : boolean,
 }
 export interface _SERVICE {
+  'disconnect_all_proxies' : ActorMethod<[], undefined>,
   'get_logs' : ActorMethod<[], Array<[string, string]>>,
   'get_request_by_id' : ActorMethod<[HttpRequestId], [] | [CanisterRequest]>,
   'http_request' : ActorMethod<

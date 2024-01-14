@@ -117,6 +117,7 @@ export const idlFactory = ({ IDL }) => {
     'Err' : IDL.Text,
   });
   return IDL.Service({
+    'disconnect_all_proxies' : IDL.Func([], [], []),
     'get_logs' : IDL.Func(
         [],
         [IDL.Vec(IDL.Tuple(IDL.Text, IDL.Text))],
