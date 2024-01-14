@@ -1,7 +1,8 @@
 use candid::{CandidType, Deserialize, Principal};
-#[allow(unused_imports)] // needed for comments
-use http_over_ws::HttpResult;
-use http_over_ws::{HttpOverWsError, HttpRequest, HttpRequestId, HttpRequestTimeoutMs};
+
+pub use http_over_ws::{
+    HttpOverWsError, HttpRequest, HttpRequestId, HttpRequestTimeoutMs, HttpResponse, HttpResult,
+};
 
 pub type CanisterId = Principal;
 pub type CanisterCallbackMethodName = String;

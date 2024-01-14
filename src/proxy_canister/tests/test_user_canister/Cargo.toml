@@ -11,5 +11,4 @@ candid = { workspace = true }
 ic-cdk = { workspace = true }
 ic-cdk-macros = { workspace = true }
 
-http_over_ws = { workspace = true }
 proxy_canister_types = { workspace = true }
