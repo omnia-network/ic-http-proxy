@@ -1,3 +1,0 @@
-[workspace]
-members = ["src/simple_backend"]
-resolver = "2"

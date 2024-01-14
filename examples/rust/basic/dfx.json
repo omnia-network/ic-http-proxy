@@ -1,8 +1,8 @@
 {
   "canisters": {
-    "simple_backend": {
-      "candid": "src/simple_backend/simple_backend.did",
-      "package": "simple_backend",
+    "basic_backend": {
+      "candid": "src/basic_backend/basic_backend.did",
+      "package": "basic_backend",
       "type": "rust"
     }
   },
