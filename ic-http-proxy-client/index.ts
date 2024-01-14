@@ -1,5 +1,6 @@
 import IcWebSocket, { createWsConfig, generateRandomIdentity } from "ic-websocket-js";
 import { proxy_canister, canisterId } from "./src/canister/declarations/proxy_canister";
+import { printVersion } from "./src/utils";
 
 /**
  * How many seconds to wait before trying to reconnect
@@ -15,6 +16,7 @@ console.log(`Config:
   IC_WS_GATEWAY_URL=${IC_WS_GATEWAY_URL},
   RECONNECT_AFTER_SECONDS=${RECONNECT_AFTER_SECONDS}`
 );
+printVersion();
 
 const wsConfig = createWsConfig({
   canisterId,
