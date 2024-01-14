@@ -2,25 +2,31 @@ import IcWebSocket, { createWsConfig, generateRandomIdentity } from "ic-websocke
 import { proxy_canister, canisterId } from "./src/canister/declarations/proxy_canister";
 
 /**
- * How long to wait before trying to reconnect
+ * How many seconds to wait before trying to reconnect
  * in case the WS connection with the canister was manually closed
  */
-const RECONNECT_AFTER_MS = 45_000;
+const RECONNECT_AFTER_SECONDS = Number(process.env.RECONNECT_AFTER_SECONDS) || 45;
 
-const icNetworkUrl = process.env.IC_NETWORK_URL as string;
-const gatewayUrl = process.env.IC_WS_GATEWAY_URL as string;
+const IC_NETWORK_URL = process.env.IC_NETWORK_URL as string;
+const IC_WS_GATEWAY_URL = process.env.IC_WS_GATEWAY_URL as string;
+
+console.log(`Config:
+  IC_NETWORK_URL=${IC_NETWORK_URL},
+  IC_WS_GATEWAY_URL=${IC_WS_GATEWAY_URL},
+  RECONNECT_AFTER_SECONDS=${RECONNECT_AFTER_SECONDS}`
+);
 
 const wsConfig = createWsConfig({
   canisterId,
   canisterActor: proxy_canister,
-  networkUrl: icNetworkUrl,
+  networkUrl: IC_NETWORK_URL,
   identity: generateRandomIdentity(),
 });
 
 console.log("Canister ID:", canisterId);
 
 const openWsConnection = () => {
-  const ws = new IcWebSocket(gatewayUrl, {}, wsConfig);
+  const ws = new IcWebSocket(IC_WS_GATEWAY_URL, {}, wsConfig);
   const principal = ws.getPrincipal().toString();
   console.log("WebSocket principal:", principal);
 
@@ -117,16 +123,16 @@ const openWsConnection = () => {
     // reconnect immediately if the connection was closed due to an error
     // otherwise wait for some time as it may be a canister upgrade
     // TODO: use better logic here
-    const reconnectAfterMs = ev.reason === "ClosedByApplication" ? RECONNECT_AFTER_MS : 0;
+    const reconnectAfterSecs = ev.reason === "ClosedByApplication" ? RECONNECT_AFTER_SECONDS : 0;
 
-    if (reconnectAfterMs > 0) {
-      console.log("Reconnecting in", reconnectAfterMs / 1000, "seconds...");
+    if (reconnectAfterSecs > 0) {
+      console.log("Reconnecting in", reconnectAfterSecs, "seconds...");
     }
 
     setTimeout(() => {
       console.log("Reconnecting...");
       openWsConnection();
-    }, reconnectAfterMs);
+    }, reconnectAfterSecs * 1000);
   };
 
   ws.onerror = (ev) => {
