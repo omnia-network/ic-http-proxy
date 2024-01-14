@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # build docker image
 docker build --platform=linux/amd64 -t ic-http-proxy-client:latest .
 
