@@ -7,6 +7,9 @@ use http_over_ws::{
     HttpFailureReason, HttpMethod, HttpOverWsError, HttpOverWsMessage, HttpRequest, HttpResponse,
     HttpResult,
 };
+use ic_websocket_cdk::types::{
+    CanisterCloseMessageContent, CloseMessageReason, WebsocketServiceMessageContent,
+};
 use lazy_static::lazy_static;
 use test_utils::{
     ic_env::{get_test_env, load_canister_wasm_from_path, CanisterData, TestEnv},
@@ -560,4 +563,55 @@ fn test_get_http_response_not_found() {
 
     let res = canister_actor.query_get_http_response(0);
     assert_eq!(res, Err(HttpOverWsError::RequestIdNotFound));
+}
+
+#[test]
+fn test_disconnect_all_proxies() {
+    setup();
+    reset_canister();
+    let test_env = get_test_env();
+    let mut proxy_client1 = ProxyClient::new(&test_env, get_test_canister_id(&test_env));
+    let mut proxy_client2 = ProxyClient::new(&test_env, get_test_canister_id(&test_env));
+    let canister_actor = CanisterActor::new(&test_env);
+
+    proxy_client1.setup_proxy();
+    proxy_client2.setup_proxy();
+
+    canister_actor.call_disconnect_all_proxies();
+
+    let close_msg1 = proxy_client1
+        .get_ws_messages()
+        .last()
+        .and_then(|m| WebsocketServiceMessageContent::from_candid_bytes(&m.content).ok())
+        .unwrap();
+    let close_msg2 = proxy_client2
+        .get_ws_messages()
+        .last()
+        .and_then(|m| WebsocketServiceMessageContent::from_candid_bytes(&m.content).ok())
+        .unwrap();
+
+    assert_eq!(
+        close_msg1,
+        WebsocketServiceMessageContent::CloseMessage(CanisterCloseMessageContent {
+            reason: CloseMessageReason::ClosedByApplication
+        }),
+    );
+    assert_eq!(
+        close_msg2,
+        WebsocketServiceMessageContent::CloseMessage(CanisterCloseMessageContent {
+            reason: CloseMessageReason::ClosedByApplication
+        }),
+    );
+
+    let res = canister_actor.call_execute_http_request(
+        HttpRequest::new(
+            TEST_URL,
+            HttpMethod::GET,
+            vec![TEST_HTTP_REQUEST_HEADER.clone()],
+            None,
+        ),
+        None,
+        false,
+    );
+    assert_eq!(res, Err(HttpOverWsError::NoProxiesConnected));
 }

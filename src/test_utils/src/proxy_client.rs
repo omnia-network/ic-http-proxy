@@ -4,11 +4,11 @@ use http_over_ws::HttpOverWsMessage;
 use crate::ic_env::TestEnv;
 
 use super::{identity::generate_random_principal, rand::generate_random_nonce};
+use ic_websocket_cdk::types::{CanisterOutputCertifiedMessages, ClientKey, WebsocketMessage};
 use ic_websocket_cdk::{
-    CanisterOutputCertifiedMessages, CanisterWsCloseArguments, CanisterWsCloseResult,
-    CanisterWsGetMessagesArguments, CanisterWsGetMessagesResult, CanisterWsMessageArguments,
-    CanisterWsMessageResult, CanisterWsOpenArguments, CanisterWsOpenResult, ClientKey,
-    WebsocketMessage,
+    CanisterWsCloseArguments, CanisterWsCloseResult, CanisterWsGetMessagesArguments,
+    CanisterWsGetMessagesResult, CanisterWsMessageArguments, CanisterWsMessageResult,
+    CanisterWsOpenArguments, CanisterWsOpenResult,
 };
 
 pub struct ProxyClient<'a> {
@@ -75,7 +75,7 @@ impl<'a> ProxyClient<'a> {
         self.send_ws_message(encode_one(message).unwrap());
     }
 
-    pub fn get_http_over_ws_messages(&mut self) -> Vec<HttpOverWsMessage> {
+    pub fn get_ws_messages(&mut self) -> Vec<WebsocketMessage> {
         let res: CanisterWsGetMessagesResult = self.test_env.query_canister_method_with_panic(
             self.canister_id,
             self.gateway_principal,
@@ -94,16 +94,19 @@ impl<'a> ProxyClient<'a> {
                     .filter_map(|m| {
                         let msg: WebsocketMessage = serde_cbor::from_slice(&m.content).unwrap();
 
-                        if msg.is_service_message {
-                            None
-                        } else {
-                            Some(decode_one(&msg.content).unwrap())
-                        }
+                        msg.client_key.eq(&self.client_key).then_some(msg)
                     })
                     .collect()
             }
             CanisterWsGetMessagesResult::Err(_) => panic!("Failed to get messages"),
         }
+    }
+
+    pub fn get_http_over_ws_messages(&mut self) -> Vec<HttpOverWsMessage> {
+        self.get_ws_messages()
+            .iter()
+            .filter_map(|msg| (!msg.is_service_message).then(|| decode_one(&msg.content).unwrap()))
+            .collect()
     }
 
     pub fn close_ws_connection(&self) {

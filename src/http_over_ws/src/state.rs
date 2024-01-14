@@ -38,6 +38,14 @@ impl State {
         self.connected_proxies.remove_proxy(proxy_principal)
     }
 
+    pub(crate) fn get_connected_proxies(&self) -> Vec<Principal> {
+        self.connected_proxies.get_all_proxies_principals()
+    }
+
+    pub(crate) fn remove_all_proxies(&mut self) {
+        self.connected_proxies.remove_all_proxies();
+    }
+
     pub(crate) fn assign_connection(
         &mut self,
         request: HttpRequest,
@@ -201,5 +209,13 @@ impl ConnectedProxies {
             .remove(proxy_principal)
             .ok_or(HttpOverWsError::ProxyNotFound)?;
         Ok(())
+    }
+
+    fn get_all_proxies_principals(&self) -> Vec<Principal> {
+        self.0.keys().map(|key| key.clone()).collect()
+    }
+
+    fn remove_all_proxies(&mut self) {
+        self.0.clear();
     }
 }

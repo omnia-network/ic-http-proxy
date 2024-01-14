@@ -4,7 +4,9 @@ mod state;
 mod utils;
 mod ws;
 
-use http_over_ws::{execute_http_request, HttpRequestId, HttpResult};
+use http_over_ws::{
+    disconnect_all_connected_proxies, execute_http_request, HttpRequestId, HttpResult,
+};
 use ic_cdk::caller;
 use ic_cdk_macros::*;
 use logger::log;
@@ -148,6 +150,14 @@ async fn http_request_callback(request_id: HttpRequestId, res: HttpResult) {
     } else {
         log!("[http_request]: request_id:{} not found", request_id);
     }
+}
+
+#[update]
+fn disconnect_all_proxies() {
+    let caller = caller();
+    guard_caller_is_controller(&caller);
+
+    disconnect_all_connected_proxies(ws::close);
 }
 
 #[query]

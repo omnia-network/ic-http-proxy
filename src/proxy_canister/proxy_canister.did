@@ -165,6 +165,7 @@ service : () -> {
     "ws_get_messages" : (CanisterWsGetMessagesArguments) -> (CanisterWsGetMessagesResult) query;
 
     "http_request" : (HttpRequestEndpointArgs) -> (HttpRequestEndpointResult);
+    "disconnect_all_proxies" : () -> ();
     "get_request_by_id" : (HttpRequestId) -> (opt CanisterRequest) query;
     "get_logs" : () -> (vec record { text; text }) query;
 };

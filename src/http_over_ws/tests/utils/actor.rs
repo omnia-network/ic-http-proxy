@@ -34,6 +34,15 @@ impl<'a> CanisterActor<'a> {
         )
     }
 
+    pub fn call_disconnect_all_proxies(&self) {
+        self.test_env.call_canister_method_with_panic(
+            self.test_canister_id,
+            self.principal,
+            "disconnect_all_proxies",
+            (),
+        )
+    }
+
     pub fn query_get_http_response(&self, request_id: HttpRequestId) -> GetHttpResponseResult {
         self.test_env.query_canister_method_with_panic(
             self.test_canister_id,

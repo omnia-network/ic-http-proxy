@@ -54,6 +54,11 @@ async fn callback(http_result: HttpResult) {
     CALLBACK_RESPONSES.with(|http_results| http_results.borrow_mut().push(http_result));
 }
 
+#[update]
+fn disconnect_all_proxies() {
+    http_over_ws::disconnect_all_connected_proxies(ic_websocket_cdk::close);
+}
+
 #[query]
 fn get_http_response(id: HttpRequestId) -> GetHttpResponseResult {
     http_over_ws::get_http_response(id)

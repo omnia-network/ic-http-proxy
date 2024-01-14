@@ -65,6 +65,11 @@ impl<'a> ProxyCanisterActor<'a> {
             .call_canister_method(self.canister_id, caller, "http_request", (args,))
     }
 
+    pub fn call_disconnect_all_proxies(&self, caller: Principal) -> Result<(), UserError> {
+        self.test_env
+            .call_canister_method(self.canister_id, caller, "disconnect_all_proxies", ())
+    }
+
     pub fn query_get_request_by_id(
         &self,
         caller: Principal,

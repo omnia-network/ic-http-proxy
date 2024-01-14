@@ -7,6 +7,7 @@ use ic_websocket_cdk::{
     OnOpenCallbackArgs, WsHandlers, WsInitParams,
 };
 
+pub use ic_websocket_cdk::close;
 pub use ic_websocket_cdk::send;
 use logger::log;
 

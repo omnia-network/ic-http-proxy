@@ -110,6 +110,24 @@ pub fn execute_http_request(
     Ok(request_id)
 }
 
+pub fn disconnect_all_connected_proxies(ws_close: fn(Principal) -> Result<(), String>) {
+    let proxies = STATE.with(|state| state.borrow().get_connected_proxies());
+
+    for proxy in proxies {
+        let res = ws_close(proxy);
+
+        if let Err(e) = res {
+            log!(
+                "http_over_ws: error while disconnecting proxy {}: {}",
+                proxy,
+                e
+            );
+        }
+    }
+
+    STATE.with(|state| state.borrow_mut().remove_all_proxies());
+}
+
 pub fn get_http_connection(request_id: HttpRequestId) -> Option<HttpRequest> {
     STATE.with(|state| state.borrow().get_http_connection(request_id))
 }
