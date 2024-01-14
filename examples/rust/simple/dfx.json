@@ -1,0 +1,18 @@
+{
+  "canisters": {
+    "simple_backend": {
+      "candid": "src/simple_backend/simple_backend.did",
+      "package": "simple_backend",
+      "type": "rust"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1,
+  "dfx": "0.15.3"
+}

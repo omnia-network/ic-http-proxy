@@ -1,0 +1,72 @@
+type HttpRequestId = nat64;
+type HttpRequestTimeoutMs = nat64;
+
+type HttpMethod = variant {
+    GET;
+    POST;
+    PUT;
+    HEAD;
+    DELETE;
+};
+
+type HttpHeader = record {
+    name : text;
+    value : text;
+};
+
+type HttpRequest = record {
+    url : text;
+    method : HttpMethod;
+    headers : vec HttpHeader;
+    body : opt blob;
+};
+
+type HttpResponse = record {
+    status : nat;
+    headers : vec HttpHeader;
+    body : blob;
+};
+
+type InvalidRequest = variant {
+    InvalidUrl : text;
+    TooManyHeaders;
+    InvalidTimeout;
+};
+
+type HttpFailureReason = variant {
+    RequestTimeout;
+    ProxyError : text;
+};
+
+type HttpOverWsError = variant {
+    NotHttpOverWsType : text;
+    InvalidHttpMessage;
+    ProxyNotFound;
+    RequestIdNotFound;
+    NotYetReceived;
+    NoProxiesConnected;
+    ConnectionNotAssignedToProxy;
+    RequestFailed : HttpFailureReason;
+};
+
+type ProxyCanisterError = variant {
+    InvalidRequest : InvalidRequest;
+    HttpOverWs : HttpOverWsError;
+};
+
+type HttpRequestEndpointResult = variant {
+    Ok : HttpRequestId;
+    Err : ProxyCanisterError;
+};
+
+type HttpResult = variant {
+    Success : HttpResponse;
+    Failure : HttpFailureReason;
+};
+
+service : (principal) -> {
+    "http_request_via_proxy" : (HttpRequest, opt HttpRequestTimeoutMs, bool) -> (HttpRequestEndpointResult);
+    "http_response_callback" : (HttpRequestId, HttpResult) -> ();
+    "get_http_results" : () -> (vec record { HttpRequestId; HttpResult }) query;
+    "get_http_result_by_id" : (HttpRequestId) -> (opt HttpResult) query;
+};
