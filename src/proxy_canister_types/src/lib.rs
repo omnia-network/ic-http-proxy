@@ -1,7 +1,8 @@
 use candid::{CandidType, Deserialize, Principal};
 
 pub use http_over_ws::{
-    HttpOverWsError, HttpRequest, HttpRequestId, HttpRequestTimeoutMs, HttpResponse, HttpResult,
+    HttpHeader, HttpMethod, HttpOverWsError, HttpRequest, HttpRequestId, HttpRequestTimeoutMs,
+    HttpResponse, HttpResult,
 };
 
 pub type CanisterId = Principal;
