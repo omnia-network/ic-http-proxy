@@ -13,6 +13,6 @@
   },
   "type": "module",
   "dependencies": {
-    "ic-websocket-js": "^0.3.2"
+    "ic-websocket-js": "^0.3.3"
   }
 }
