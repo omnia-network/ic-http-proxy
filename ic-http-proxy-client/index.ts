@@ -66,8 +66,9 @@ const openWsConnection = () => {
             "\nExecuting HTTP request:",
             "\nurl:", url.toString(),
             "\nmethod:", method,
-            "\nheaders:", headers,
+            "\nheaders count:", headers.count,
             "\nbody bytes:", body?.length || 0,
+            // "\nheaders:", headers,
             // "\nbody:", body ? new TextDecoder().decode(body) : null
           );
 
