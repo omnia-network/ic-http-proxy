@@ -32,3 +32,11 @@ Make sure you have [jq](https://jqlang.github.io/jq) installed.
 ```
 
 Note: the script will attempt to get the ID of the HTTP Proxy Canister from the [canister_ids.json](../../../canister_ids.json) file, and pass it as the init argument to the `basic_backend` canister.
+
+## Import the Proxy canister types in your project
+
+To import the Proxy canister Rust types, simply add the following line in your `Cargo.toml` file:
+
+```toml
+proxy_canister_types = { git = "https://github.com/omnia-network/ic-http-proxy", package = "proxy_canister_types" }
+```
