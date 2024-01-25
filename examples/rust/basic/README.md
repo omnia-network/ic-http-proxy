@@ -1,6 +1,6 @@
 # Basic example (Rust)
 
-This example contains a [backend canister](./src/basic_backend/) written in Rust that sends HTTP requests via the [Proxy canister](../../../src/proxy_canister/) to external APIs.
+This example contains a [backend canister](./src/basic_backend/) written in Rust that sends HTTP requests via the [Proxy canister](../../../src/proxy_canister/) to external APIs. Current proxy canister id: `iustv-tiaaa-aaaao-a3aga-cai`.
 
 ## Usage
 
